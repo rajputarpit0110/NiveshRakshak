@@ -142,20 +142,101 @@ CLOSING BALANCE: ₹11,375.50 Cr`;
                 {analysis?.file_name || 'Zerodha_Ledger_Statement_Mar2024.pdf'}
               </span>
             </div>
-            <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
-              Interactive Preview
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2.5 py-0.5 rounded-full border border-rose-200 flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500 animate-pulse"></span>
+                1 Disputed Entry
+              </span>
+              <span className="text-[10px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200">
+                Interactive Preview
+              </span>
+            </div>
           </div>
 
-          <div className="p-4 rounded-2xl bg-slate-900 text-slate-200 font-mono text-xs leading-relaxed overflow-x-auto h-[480px] relative shadow-inner">
-            <pre className="whitespace-pre">
-              {documentContent}
-            </pre>
-
-            {/* Suspicious Highlight Badge */}
-            <div className="absolute right-4 top-28 bg-rose-500/20 border border-rose-500 text-rose-300 text-[10px] px-2.5 py-1 rounded-md shadow-md animate-pulse">
-              ⚠ Disputed Debit Detected: ₹2,500.00
+          {/* Terminal / Code / Document Inspector Container */}
+          <div className="rounded-2xl bg-slate-900 border border-slate-800 text-slate-200 font-mono text-xs leading-relaxed overflow-hidden shadow-lg flex flex-col h-[480px]">
+            {/* Window Top Bar */}
+            <div className="px-4 py-2.5 bg-slate-950/80 border-b border-slate-800 flex items-center justify-between shrink-0">
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80"></div>
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80"></div>
+                </div>
+                <span className="text-[11px] font-medium text-slate-400 ml-2">
+                  statement_audit_view.log
+                </span>
+              </div>
+              <span className="text-[10px] text-slate-400">
+                UTF-8 • Monospace
+              </span>
             </div>
+
+            {/* Document Lines */}
+            <div className="p-4 overflow-auto flex-1 space-y-1">
+              {documentContent.split('\n').map((line, idx) => {
+                const isSuspicious = line.includes('[SUSPICIOUS]') || line.includes('Sundry Maintenance Fee') || line.includes('2,500.00 Dr');
+                const isHeader = line.includes('DATE') && line.includes('PARTICULARS');
+                const isTitle = line.includes('CLIENT FINANCIAL LEDGER') || line.startsWith('Entity:') || line.startsWith('Client:') || line.startsWith('Period:');
+                const isTotal = line.includes('CLOSING BALANCE');
+
+                if (isSuspicious) {
+                  const cleanLine = line.replace('<<< [SUSPICIOUS]', '').trimEnd();
+                  return (
+                    <div 
+                      key={idx} 
+                      className="py-1.5 px-2.5 rounded-lg bg-rose-950/80 border border-rose-500/60 my-1 text-rose-200 flex flex-wrap items-center justify-between gap-2 shadow-xs"
+                    >
+                      <span className="font-semibold text-rose-300 font-mono text-[11px] whitespace-pre">
+                        {cleanLine}
+                      </span>
+                      <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-rose-600 text-white shadow-xs shrink-0">
+                        ⚠ DISPUTED DEBIT: ₹2,500.00
+                      </span>
+                    </div>
+                  );
+                }
+
+                return (
+                  <div 
+                    key={idx} 
+                    className={`font-mono text-[11px] whitespace-pre py-0.5 ${
+                      isHeader 
+                        ? 'text-slate-400 font-bold border-b border-slate-800 pb-1 text-[11px] tracking-wide' 
+                        : isTitle 
+                          ? 'text-slate-300 font-medium' 
+                          : isTotal 
+                            ? 'text-emerald-400 font-bold pt-2 border-t border-slate-800 text-[11px]' 
+                            : 'text-slate-300'
+                    }`}
+                  >
+                    {line || '\u00A0'}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Terminal Status Footer */}
+            <div className="px-4 py-2 bg-slate-950/90 border-t border-slate-800 text-[11px] text-slate-400 flex items-center justify-between shrink-0">
+              <span className="flex items-center gap-1.5 text-rose-400 font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                Line 9 Flagged: ₹2,500 Unexplained Ledger Debit
+              </span>
+              <span className="text-[10px] text-slate-500 font-sans">SEBI Tariff Cross-Check</span>
+            </div>
+          </div>
+
+          {/* Clean Alert Box below Document Preview */}
+          <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-900 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
+              <span>
+                <strong>Audit Finding:</strong> ₹2,500.00 marked as "Sundry Maintenance Fee" on 14-03-2024 has no regulatory tariff backing.
+              </span>
+            </div>
+            <span className="text-[10px] font-bold px-2 py-0.5 bg-rose-200 text-rose-800 rounded shrink-0 ml-2">
+              SEBI Rule Breach
+            </span>
           </div>
         </div>
 
