@@ -58,7 +58,7 @@ export const App: React.FC = () => {
       case 'scam':
         return <ScamRadar />;
       case 'academy':
-        return <SafetyAcademy />;
+        return <SafetyAcademy onNavigate={handleNavigate} />;
       case 'library':
         return <RightsLibrary onNavigate={handleNavigate} />;
       case 'health':
