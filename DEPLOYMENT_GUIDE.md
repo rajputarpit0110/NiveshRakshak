@@ -1,56 +1,47 @@
-# 🚀 NiveshRakshak Deployment Guide
+# 🚀 NiveshRakshak Deployment: Vercel (Frontend) + Render (Backend & AI)
 
-This guide explains how to deploy **NiveshRakshak** to **Render** using the included automated Blueprint (`render.yaml`).
+This guide walks you through deploying:
+1. **Backend & AI Microservices on Render** (FastAPI RAG + Node.js API)
+2. **Frontend on Vercel** (Global Edge CDN for React + Vite)
 
 ---
 
-## ⚡ Method 1: 1-Click Render Blueprint (Recommended)
+## 🟢 Part 1: Deploy Backend & AI Service on Render (First)
 
-Render provides automated multi-service provisioning using the repository's [`render.yaml`](./render.yaml).
+Because the frontend connects to your backend API, deploy the backend services on Render first to obtain your live backend URL.
 
-### Step 1: Create an Account on Render
-1. Go to [render.com](https://render.com) and log in with your GitHub account.
-
-### Step 2: Create a New Blueprint Instance
-1. In the Render Dashboard, click **New +** (top right) and select **Blueprint**.
-2. Connect your GitHub repository:
+### Option A: 1-Click Render Blueprint (Fastest)
+1. Go to **[dashboard.render.com](https://dashboard.render.com)** and log in with your GitHub account.
+2. Click **New +** (top right) → **Blueprint**.
+3. Connect your repository:
    ```
    rajputarpit0110/NiveshRakshak
    ```
-3. Render will parse [`render.yaml`](./render.yaml) and automatically detect all 3 services:
-   - 🧠 **`niveshrakshak-ai`**: Python 3.11 FastAPI microservice with 354 pre-indexed RAG chunks
-   - ⚙️ **`niveshrakshak-backend`**: Node.js Express orchestration API
-   - 💻 **`niveshrakshak-frontend`**: React + Vite + Tailwind static application
+4. Render will read [`render.yaml`](./render.yaml) and automatically create:
+   - 🧠 **`niveshrakshak-ai`** (Python 3.11 FastAPI RAG engine)
+   - ⚙️ **`niveshrakshak-backend`** (Node.js Express orchestration API)
+5. Click **Apply**.
+6. When deployment finishes, copy your backend URL:
+   ```
+   https://niveshrakshak-backend.onrender.com
+   ```
 
-### Step 3: Apply & Deploy
-1. Click **Apply**.
-2. Render will build and deploy the services in sequence:
-   - `niveshrakshak-ai` installs `requirements.txt` and starts on uvicorn.
-   - `niveshrakshak-backend` connects directly to the internal AI service URL.
-   - `niveshrakshak-frontend` compiles Vite and serves the SPA with clean rewrites.
-3. Once the build completes (approx. 2-3 minutes), you will receive your live URL:
-   - **Frontend:** `https://niveshrakshak-frontend.onrender.com`
-   - **Backend API:** `https://niveshrakshak-backend.onrender.com`
-   - **AI Microservice:** `https://niveshrakshak-ai.onrender.com`
+### Option B: Manual Web Service on Render (If not using Blueprint)
+If you prefer creating them manually:
 
----
-
-## 🌐 Method 2: Manual Service Creation on Render
-
-If you prefer to configure each service manually without Blueprint:
-
-### 1. Deploy Python AI Service
-- Click **New +** → **Web Service**
-- Repository: `rajputarpit0110/NiveshRakshak`
+#### 1. AI Service:
+- **New +** → **Web Service** → Select `rajputarpit0110/NiveshRakshak`
+- **Name:** `niveshrakshak-ai`
 - **Root Directory:** `ai-service`
 - **Runtime:** `Python 3`
 - **Build Command:** `pip install --upgrade pip && pip install -r requirements.txt`
 - **Start Command:** `uvicorn main:app --host 0.0.0.0 --port $PORT`
 - **Plan:** Free
+- Copy the deployed URL (e.g. `https://niveshrakshak-ai.onrender.com`)
 
-### 2. Deploy Node.js Backend
-- Click **New +** → **Web Service**
-- Repository: `rajputarpit0110/NiveshRakshak`
+#### 2. Backend Service:
+- **New +** → **Web Service** → Select `rajputarpit0110/NiveshRakshak`
+- **Name:** `niveshrakshak-backend`
 - **Root Directory:** `backend`
 - **Runtime:** `Node`
 - **Build Command:** `npm install`
@@ -58,54 +49,65 @@ If you prefer to configure each service manually without Blueprint:
 - **Environment Variables:**
   - `NODE_ENV`: `production`
   - `AI_SERVICE_URL`: `<URL of deployed niveshrakshak-ai>`
-  - `JWT_SECRET`: `your_random_secret_string`
-
-### 3. Deploy Frontend (Static Site)
-- Click **New +** → **Static Site**
-- Repository: `rajputarpit0110/NiveshRakshak`
-- **Root Directory:** `frontend`
-- **Build Command:** `npm install && npm run build`
-- **Publish Directory:** `dist`
-- **Environment Variables:**
-  - `VITE_API_URL`: `<URL of deployed backend>/api`
-- **Redirects/Rewrites:**
-  - Source: `/*`
-  - Destination: `/index.html`
-  - Action: `Rewrite`
+  - `JWT_SECRET`: `any_long_random_secret_key`
+- Copy the deployed backend URL (e.g. `https://niveshrakshak-backend.onrender.com`)
 
 ---
 
-## 🐳 Method 3: Self-Hosted Docker Compose
+## ⚡ Part 2: Deploy Frontend on Vercel
 
-To deploy on any Ubuntu/Debian VPS (AWS EC2, DigitalOcean, Hetzner, etc.):
+### Step 1: Open Vercel Dashboard
+1. Go to **[vercel.com](https://vercel.com)** and log in with your GitHub account.
+2. Click **Add New...** → **Project**.
 
-```bash
-# Clone the repository
-git clone https://github.com/rajputarpit0110/NiveshRakshak.git
-cd NiveshRakshak
+### Step 2: Import Repository
+1. Select your GitHub repository:
+   ```
+   rajputarpit0110/NiveshRakshak
+   ```
 
-# Build and start all 3 services in detached mode
-docker compose up -d --build
+### Step 3: Configure Project Settings on Vercel
+1. **Framework Preset:** `Vite` (auto-detected).
+2. **Root Directory:** Click **Edit** and set it to:
+   ```
+   frontend
+   ```
+3. **Build & Output Settings:**
+   - Build Command: `npm run build` (default)
+   - Output Directory: `dist` (default)
 
-# View container logs
-docker compose logs -f
-```
+### Step 4: Add Environment Variable
+Under **Environment Variables**, add:
+- **Key:** `VITE_API_URL`
+- **Value:** `https://<your-render-backend-name>.onrender.com/api`
+  *(e.g., `https://niveshrakshak-backend.onrender.com/api`)*
 
-The application will be live at:
-- **Frontend:** `http://<your-server-ip>`
-- **Backend API:** `http://<your-server-ip>:5001`
-- **AI Service:** `http://<your-server-ip>:8000`
+### Step 5: Click Deploy
+1. Click **Deploy**.
+2. Within 60 seconds, Vercel will build and assign you a global CDN domain, such as:
+   ```
+   https://niveshrakshak.vercel.app
+   ```
 
 ---
 
-## 🔍 Verification & Health Check
+## ✅ Part 3: Verification Checklist
 
-After deployment, verify the endpoints:
-```bash
-# AI Microservice Health
-curl https://<your-ai-service>.onrender.com/health
+Once both are deployed:
 
-# Backend Health
-curl https://<your-backend>.onrender.com/health
-```
-Both will return `{"status": "healthy"}`.
+1. **Verify Backend Health:**
+   ```bash
+   curl https://<your-backend>.onrender.com/health
+   # Returns: {"status":"healthy","service":"NiveshRakshak-Backend",...}
+   ```
+
+2. **Verify AI RAG Health:**
+   ```bash
+   curl https://<your-ai-service>.onrender.com/health
+   # Returns: {"status":"healthy","service":"NiveshRakshak-AI-Service","knowledge_base":{"total_chunks":354,...}}
+   ```
+
+3. **Verify Vercel Web App:**
+   - Open your Vercel URL: `https://<your-app>.vercel.app`
+   - Ask a question in the AI Rights Assistant or run a Grievance draft.
+   - All RAG responses, document audits, and scam radar checks will load live from your Render backend!

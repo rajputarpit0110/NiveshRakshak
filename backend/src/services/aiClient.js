@@ -1,6 +1,10 @@
 const axios = require('axios');
 
-const AI_SERVICE_URL = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
+let rawAiUrl = process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000';
+if (rawAiUrl && !rawAiUrl.startsWith('http://') && !rawAiUrl.startsWith('https://')) {
+  rawAiUrl = `http://${rawAiUrl}`;
+}
+const AI_SERVICE_URL = rawAiUrl.replace(/\/+$/, '');
 
 class AIClient {
   static async ask(query, filters = null) {
