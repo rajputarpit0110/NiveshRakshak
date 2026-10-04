@@ -1,0 +1,927 @@
+================================================================================
+NIVESHRAKSHAK — AI INVESTOR RIGHTS & GRIEVANCE ASSISTANT
+COMPLETE ARCHITECTURE, END-TO-END SYSTEM FLOW, USER MANUAL & TESTING GUIDE
+================================================================================
+
+"From Confusion to Complaint to Resolution, in One Platform."
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+1. EXECUTIVE SUMMARY & MISSION
+2. SYSTEM ARCHITECTURE
+   2.1 High-Level Architecture Diagram
+   2.2 Technology Stack
+   2.3 Data Storage & Vector Store Architecture
+   2.4 Multi-Agent Orchestration Architecture
+3. END-TO-END APPLICATION FLOW & SUBSYSTEMS
+   3.1 The 8-Stage Investor Journey Flowchart
+   3.2 Subsystem 1: Rights Assistant (Verified RAG Chat)
+   3.3 Subsystem 2: Grievance Intelligence Studio & Complaint Drafter
+   3.4 Subsystem 3: Grievance Lifecycle Tracker
+   3.5 Subsystem 4: Document Forensic Audit Studio
+   3.6 Subsystem 5: Scam & Fraud Signal Radar
+   3.7 Subsystem 6: Investor Safety Academy & Adaptive Quiz
+   3.8 Subsystem 7: Statutory Rights Library
+   3.9 Subsystem 8: RAG Knowledge Base & Evaluator Monitor
+   3.10 Subsystem 9: Trust & Responsible AI Center
+   3.11 Subsystem 10: 1-Click Interactive Judge Demo
+4. DETAILED ASCII FLOWCHARTS
+   4.1 Complete Data & Request Flowchart
+   4.2 RAG Hybrid Retrieval & Citation Flowchart
+   4.3 Document Forensic Extraction & Evidence Mapping Flowchart
+   4.4 Grievance Intelligence & Quality Scoring Loop
+   4.5 Adaptive Learning & Safety Score Recalculation Loop
+5. HOW TO RUN THE APPLICATION (STEP-BY-STEP)
+   5.1 Prerequisites
+   5.2 Quick Launch Commands
+   5.3 RAG Ingestion & Re-indexing Commands
+6. HOW TO TEST THE ENTIRE PLATFORM
+   6.1 Automated RAG Benchmark Evaluation Testing
+   6.2 API Endpoints Testing (cURL Commands)
+   6.3 Frontend Feature-by-Feature Testing Checklist
+   6.4 2-Minute Hackathon Judge Demo Script
+7. ANTI-HALLUCINATION & SECURITY GUARDRAILS
+8. TROUBLESHOOTING & COMMON SCENARIOS
+
+================================================================================
+1. EXECUTIVE SUMMARY & MISSION
+================================================================================
+Retail investors in India often face unexplained broker deductions, delayed 
+redemptions, unauthorized trades, mis-selling, and complex grievance portals 
+(SEBI SCORES, SMART ODR, BSE/NSE Investor Services, Banking Ombudsman). 
+
+NiveshRakshak transforms this chaotic, frustrating experience into a structured, 
+actionable operating system. It never acts as a generic conversational chatbot:
+every regulatory output is strictly anchored to statutory circulars, Master 
+Directions, and investor charters from SEBI, NSE, BSE, AMFI, and RBI.
+
+Core Value Proposition:
+1. Grounded Regulatory Guidance: Zero hallucinated rules. If evidence is missing 
+   from the verified knowledge base, the system explicitly states:
+   "I could not find sufficient information in the verified knowledge base."
+2. Document Forensic Audit: Uploads contract notes, ledgers, and statements to 
+   extract charges, identify missing contract notes, and highlight violations.
+3. Intelligent Evidence Checklist: Calculates evidence completeness percentage 
+   before drafting complaints.
+4. Formal Complaint Drafting & Quality Scoring: Generates structured legal-grade 
+   complaints with a 0-100 Complaint Quality Score and instant branded PDF export.
+5. Personalized Safety Score (0-100): Evaluates 6 key safety dimensions and 
+   runs an adaptive learning loop with real-world scenarios.
+
+================================================================================
+2. SYSTEM ARCHITECTURE
+================================================================================
+
+2.1 HIGH-LEVEL ARCHITECTURE DIAGRAM
+--------------------------------------------------------------------------------
+
++------------------------------------------------------------------------------+
+|                            USER INTERFACE LAYER                              |
+|           React 18 + Vite + TypeScript + Tailwind CSS (Port 5173)            |
+|                                                                              |
+|  [Command Center]   [Rights Chat]   [Grievance Studio]  [Document Audit]     |
+|  [Scam Radar]       [Tracker]       [Safety Academy]    [RAG Health Monitor] |
++---------------------------------------+--------------------------------------+
+                                        | HTTP / JSON REST
+                                        v
++------------------------------------------------------------------------------+
+|                         APPLICATION BACKEND LAYER                            |
+|             Node.js 20 + Express + JWT + PDFKit (Port 5001)                 |
+|                                                                              |
+|  - Rate Limiting (express-rate-limit) & Helmet Security Headers              |
+|  - Auth Middleware & Input Validation (Zod/Sanitization)                     |
+|  - Complaint & Document Controllers                                          |
+|  - In-Memory / MongoDB Resilient Database Storage                            |
+|  - PDFKit Complaint Document Generator with Official Branding                |
++---------------------------------------+--------------------------------------+
+                                        | Internal Service Proxy
+                                        v
++------------------------------------------------------------------------------+
+|                            AI MICROSERVICE LAYER                             |
+|          Python 3.12 + FastAPI + RAG Pipeline + Agents (Port 8000)           |
+|                                                                              |
+|  [Orchestrator] -----> [Rights Agent]      [Grievance Agent]                 |
+|                   ---> [Scam Radar Agent]  [Document Forensic Agent]         |
+|                   ---> [Complaint Agent]   [Learning Academy Agent]          |
+|                   ---> [Recommendation Agent]                                |
+|                                                                              |
+|  HYBRID RAG RETRIEVAL:                                                       |
+|  - BM25 Token-Based Keyword Matcher                                          |
+|  - Dense Normalized Feature Vectorizer (Embeddings)                          |
+|  - Reciprocal Rank Fusion (RRF) & Cross-Encoder Reranker                     |
+|  - Groundedness Verifier & Source Citation Formatter                         |
++---------------------------------------+--------------------------------------+
+                                        | File System / Persistent Storage
+                                        v
++------------------------------------------------------------------------------+
+|                       KNOWLEDGE & DATA PERSISTENCE                           |
+|                                                                              |
+|  - Official Regulations: /data/rag_data/ (SEBI, NSE, BSE, AMFI, RBI)        |
+|  - Ingestion Manifest:   /ai-service/rag_storage/knowledge_manifest.json     |
+|  - Chunk Metadata:       /ai-service/rag_storage/chunks.json (77 Chunks)     |
+|  - Vector Index:         /ai-service/rag_storage/embeddings.npy              |
++------------------------------------------------------------------------------+
+
+2.2 TECHNOLOGY STACK
+--------------------------------------------------------------------------------
+- Frontend:
+  * Framework: React 18 with Vite and TypeScript
+  * Styling: Tailwind CSS (Fintech Slate/Navy Dark Palette)
+  * Icons: Lucide React
+  * State & Network: Native Fetch with centralized API service proxy
+- Backend:
+  * Runtime: Node.js 20 LTS
+  * Web Framework: Express.js
+  * Security: Helmet, CORS, Rate Limiter (100 req/15min)
+  * Authentication: JSON Web Tokens (JWT) + bcrypt password hashing
+  * Document Generation: PDFKit (Vector layout, metadata stamps, signature blocks)
+  * Database: MongoDB with Mongoose + resilient in-memory fallback
+- AI Service:
+  * Language & Runtime: Python 3.12 via Virtualenv (`ai-service/.venv`)
+  * Web Framework: FastAPI + Uvicorn
+  * Numerical & RAG Engine: NumPy, scikit-learn, rank-bm25, PyPDF2
+  * Embeddings: Dense 256-dim feature vectorizer with domain term projection
+  * Evaluation: Dedicated benchmark harness (`evaluator.py`)
+
+2.3 DATA STORAGE & VECTOR STORE ARCHITECTURE
+--------------------------------------------------------------------------------
+1. Statutory Sources (`data/rag_data/`):
+   Contains authoritative legal texts:
+   - SEBI Investor Charter 2021
+   - SEBI Master Circular on Grievance Redressal (SCORES 2.0 & SMART ODR)
+   - NSE Master Circular on Trading & Settlement Rules (T+1, Contract Notes)
+   - BSE Investor Services Cell & Arbitration Rules
+   - AMFI Code of Conduct on Mutual Fund Redemptions & T+2 Payouts
+   - RBI Integrated Ombudsman Scheme 2021
+   - SEBI Advisory on Unregistered Finfluencers & Algorithmic Scams
+   - SEBI KYC Master Direction & Demat Dormancy Rules
+   - SEBI Prohibition of Fraudulent and Unfair Trade Practices (PFUTP)
+   - SEBI Advisory on Unauthorized Algorithmic Trading & Social Media Frauds
+
+2. Persistent Vector Index (`ai-service/rag_storage/`):
+   - `knowledge_manifest.json`: Tracks SHA-256 hashes, file modification times, 
+     chunk counts, and authorities to eliminate redundant re-indexing.
+   - `chunks.json`: Stores 77 hierarchical chunks with source name, authority, 
+     section, page, chunk id, and verified excerpts.
+   - `embeddings.npy`: Binary NumPy matrix of dense normalized vectors.
+
+2.4 MULTI-AGENT ORCHESTRATION ARCHITECTURE
+--------------------------------------------------------------------------------
+The system uses a specialized multi-agent design rather than a single monolith:
+1. Orchestrator (`orchestrator.py`):
+   Classifies incoming user intent into RIGHTS, GRIEVANCE, SCAM, DOCUMENT, 
+   COMPLAINT, or LEARNING and routes to the appropriate specialist agent.
+2. Rights Agent (`rights_agent.py`):
+   Executes hybrid RAG retrieval, runs anti-hallucination checks, builds verified 
+   citations with page numbers, and formulates structured legal rights advice.
+3. Grievance Agent (`grievance_agent.py`):
+   Extracts category, subcategory, financial impact, entity names, missing evidence, 
+   statutory escalation tiers (Intermediary -> SCORES -> SMART ODR), and deadlines.
+4. Scam Radar Agent (`scam_agent.py`):
+   Scans messages, URLs, promises, and telegram handles for 10 high-risk patterns 
+   (e.g., guaranteed returns, SEBI impersonation, unverified UPIs, APK downloads).
+5. Document Forensic Agent (`document_agent.py`):
+   Parses financial statements, contracts, and ledgers; extracts transactions; 
+   flags unauthorized brokerage/charges against SEBI maximum statutory ceilings.
+6. Complaint Agent (`complaint_agent.py`):
+   Evaluates evidence completeness, drafts legal grievance petitions, calculates 
+   the 0-100 Complaint Quality Score, and generates PDF export payloads.
+7. Learning Academy Agent (`learning_agent.py`):
+   Generates adaptive scenario-based quizzes, diagnoses weak dimensions, and 
+   calculates the multi-dimensional Investor Safety Score (0-100).
+8. Recommendation Agent (`recommendation_agent.py`):
+   Analyzes all open grievances, documents, and quiz scores to output the 
+   "Next Best Action" for the investor.
+
+================================================================================
+3. END-TO-END APPLICATION FLOW & SUBSYSTEMS
+================================================================================
+
+3.1 THE 8-STAGE INVESTOR JOURNEY FLOWCHART
+--------------------------------------------------------------------------------
+
+  [STAGE 1: CONFUSION]
+  Investor notices deduction, delayed payout, or suspicious communication.
+           |
+           v
+  [STAGE 2: UNDERSTANDING]
+  Investor asks Rights Assistant ("Can broker charge ₹2,500 without contract note?").
+  AI retrieves verified SEBI/NSE regulations with exact section and page citations.
+           |
+           v
+  [STAGE 3: RISK DETECTION]
+  Investor pastes suspicious advisory or message into Scam Radar.
+  System detects high-risk signals (guaranteed returns, unregistered advisory).
+           |
+           v
+  [STAGE 4: EVIDENCE AUDIT]
+  Investor uploads ledger / account statement to Document Forensic Studio.
+  System audits line items, flags unauthorized charges, and calculates evidence gap.
+           |
+           v
+  [STAGE 5: GRIEVANCE INTAKE]
+  System creates formal grievance record with category, financial impact, and 
+  entity details.
+           |
+           v
+  [STAGE 6: COMPLAINT DRAFTING & SCORING]
+  AI drafts professional complaint petition; evaluates 0-100 Quality Score.
+  Investor reviews/edits and downloads official stamped PDF.
+           |
+           v
+  [STAGE 7: ESCALATION & TRACKING]
+  Grievance enters live lifecycle tracker with statutory deadlines 
+  (21 days for broker, 21 days for SCORES 2.0, online dispute resolution via SMART ODR).
+           |
+           v
+  [STAGE 8: RESOLUTION & EDUCATION]
+  Investor completes adaptive quizzes in Safety Academy to boost Safety Score 
+  and prevent recurrence.
+
+--------------------------------------------------------------------------------
+3.2 SUBSYSTEM 1: RIGHTS ASSISTANT (VERIFIED RAG CHAT)
+--------------------------------------------------------------------------------
+- Purpose: Provides instant, legal-grade answers to investor rights queries.
+- Key Capabilities:
+  * Strict grounding: Answers exclusively from ingested regulatory texts.
+  * Verified Source Citations: Displays authority badge (SEBI, NSE, RBI, AMFI), 
+    document title, section, page number, relevance score, and source excerpt.
+  * Follow-up Suggestions & Next Actions: Directly offers one-click shortcuts 
+    to analyze a document or draft a formal complaint.
+  * Non-hallucinatory fallback: When an out-of-scope query is received, it 
+    refuses to fabricate answers and directs to official helplines.
+
+--------------------------------------------------------------------------------
+3.3 SUBSYSTEM 2: GRIEVANCE INTELLIGENCE STUDIO & COMPLAINT DRAFTER
+--------------------------------------------------------------------------------
+- Purpose: Translates investor disputes into formal, structured legal filings.
+- Key Capabilities:
+  * Automated Classification: Maps dispute to 12 regulatory categories 
+    (Unauthorized Charges, Mis-selling, Delayed Redemption, Non-receipt of funds, etc.).
+  * Evidence Completeness Meter: Evaluates required documents (Contract note, 
+    bank statement, broker email, ledger) and calculates an evidence completeness %.
+  * Statutory Escalation Roadmap: Identifies exact regulatory paths:
+    Tier 1: Broker / Intermediary Grievance Officer (21 days)
+    Tier 2: Exchange / SEBI SCORES 2.0 Portal (21 days)
+    Tier 3: SMART ODR Online Dispute Resolution / Conciliation / Arbitration
+  * Complaint Drafter: Synthesizes subject, chronology, legal provisions, and 
+    requested reliefs into a professional legal format.
+  * Complaint Quality Score (0-100): Evaluates clarity, facts, amounts, 
+    evidence attachments, and provides concrete improvement advice.
+  * PDF Export Engine: Downloads a formatted, official PDF document.
+
+--------------------------------------------------------------------------------
+3.4 SUBSYSTEM 3: GRIEVANCE LIFECYCLE TRACKER
+--------------------------------------------------------------------------------
+- Purpose: Real-time visual tracking of submitted grievances.
+- Key Capabilities:
+  * Visual Stage Progression: SUBMITTED -> ACKNOWLEDGED -> UNDER_REVIEW -> 
+    ESCALATED -> RESOLVED.
+  * Dynamic Deadline Monitor: Calculates remaining calendar days before 
+    investor is eligible to escalate to SEBI SCORES or SMART ODR.
+  * Action History & Status Events: Timestamped log of communications, evidence 
+    submissions, and intermediary replies.
+
+--------------------------------------------------------------------------------
+3.5 SUBSYSTEM 4: DOCUMENT FORENSIC AUDIT STUDIO
+--------------------------------------------------------------------------------
+- Purpose: Automated audit of financial statements, contract notes, and ledgers.
+- Key Capabilities:
+  * Upload Support: Ingests PDF statements, text ledgers, and transaction files.
+  * Forensic Charge Detection: Scans every debit item; compares charges against 
+    SEBI statutory maximums (e.g. max brokerage cap of 2.5%, turnover fees).
+  * Missing Evidence Detection: Highlights unbilled turnover or missing 
+    corresponding contract notes within mandatory 24-hour statutory windows.
+  * Interactive Findings Panel: Grouped by Potential Issues, Detected Charges, 
+    Key Dates, and Recommended Investor Remedies.
+
+--------------------------------------------------------------------------------
+3.6 SUBSYSTEM 5: SCAM & FRAUD SIGNAL RADAR
+--------------------------------------------------------------------------------
+- Purpose: Early warning risk analyzer for suspicious investment solicitations.
+- Key Capabilities:
+  * 10 High-Risk Signal Detectors:
+    1. Guaranteed / Assured Return Claims (Violation of SEBI regulations)
+    2. High-Pressure / Artificial Urgency Tactics ("Transfer within 1 hour")
+    3. Unregistered Intermediaries / Fake SEBI Registration Numbers
+    4. Personal UPI / Private Bank Accounts for Equity Investments
+    5. Requests for Remote Screen Access Apps (AnyDesk, TeamViewer, RustDesk)
+    6. Telegram / WhatsApp "VIP Institutional / Upper Circuit" Groups
+    7. Unrealistic Profit Promises (e.g., 20-50% monthly returns)
+    8. Demands for "Withdrawal Tax" or "Security Deposits" to release funds
+    9. Unofficial APK Downloads or Fake Trading Portal Links
+   10. Sharing of OTPs, Passwords, or Demat Credentials
+  * Safe Harbor Disclaimers: Provides educational risk indicators without 
+    making definitive criminal charges, advising investor verification steps.
+
+--------------------------------------------------------------------------------
+3.7 SUBSYSTEM 6: INVESTOR SAFETY ACADEMY & ADAPTIVE QUIZ
+--------------------------------------------------------------------------------
+- Purpose: Continuous investor education with personalized safety scoring.
+- Key Capabilities:
+  * 6-Dimension Safety Score (0-100):
+    1. Investor Rights Awareness
+    2. Grievance Redressal Mechanisms
+    3. Scam & Fraud Detection
+    4. KYC & Demat Account Hygiene
+    5. Financial Document & Statement Auditing
+    6. Digital Security & Operational Safety Habits
+  * Adaptive Scenario-Based Quizzes: Real-world practical dilemmas (e.g., 
+    broker demands verbal authorization, WhatsApp group offers IPO allocation).
+  * Feedback & Learning Modules: Weak dimensions are identified and paired 
+    with bite-sized remedial reading modules to improve investor safety score.
+
+--------------------------------------------------------------------------------
+3.8 SUBSYSTEM 7: STATUTORY RIGHTS LIBRARY
+--------------------------------------------------------------------------------
+- Purpose: Interactive, searchable catalog of investor rights in simple language.
+- Key Capabilities:
+  * Structure: Legal Provision -> Plain English Translation -> Real-World 
+    Example Scenario -> Immediate Action You Can Take.
+  * Multi-Domain Coverage: Trading & Brokerage, Mutual Funds, IPO & Demat, 
+    Grievance Redressal, and Digital Privacy.
+
+--------------------------------------------------------------------------------
+3.9 SUBSYSTEM 8: RAG KNOWLEDGE BASE & EVALUATOR MONITOR
+--------------------------------------------------------------------------------
+- Purpose: Real-time observability and health dashboard for the RAG knowledge base.
+- Key Capabilities:
+  * Live Metrics: Document count, total indexed chunks, authorities represented, 
+    and vector store index status.
+  * Live Evaluator Suite: Real-time execution of the 7 golden test cases (TC01-TC07) 
+    measuring Retrieval Relevance (100%), Citation Coverage (100%), 
+    Groundedness (100%), and Anti-Hallucination Fallback (100%).
+
+--------------------------------------------------------------------------------
+3.10 SUBSYSTEM 9: TRUST & RESPONSIBLE AI CENTER
+--------------------------------------------------------------------------------
+- Purpose: Explains safety architecture, privacy protections, and ethics.
+- Key Capabilities:
+  * 100% Grounded Regulatory Advice: Strict prohibition on synthetic rules.
+  * Human-in-the-Loop Mandate: No complaint is ever submitted without explicit 
+    investor review and signature.
+  * Zero Data Leaks: Sanitized processing, no credential logging, and right 
+    to delete all uploaded documents.
+
+--------------------------------------------------------------------------------
+3.11 SUBSYSTEM 10: 1-CLICK INTERACTIVE JUDGE DEMO
+--------------------------------------------------------------------------------
+- Purpose: Instant 6-stage simulated walkthrough for hackathon evaluation.
+- Stages:
+  Stage 1: Dispute Ingestion (Unexplained ₹2,500 Broker Deduction)
+  Stage 2: Forensic Document Audit (Ledger Scan & Missing Contract Note Flag)
+  Stage 3: Grounded Regulatory Retrieval (SEBI Charter & NSE Circular Citation)
+  Stage 4: Evidence Completeness Checklist (Missing fee schedule identified)
+  Stage 5: Complaint Generation & Quality Check (88/100 Quality Score)
+  Stage 6: Lifecycle Tracking & Statutory Escalation Timeline (21 Days to SCORES)
+
+================================================================================
+4. DETAILED ASCII FLOWCHARTS
+================================================================================
+
+4.1 COMPLETE DATA & REQUEST FLOWCHART
+--------------------------------------------------------------------------------
+
+  +------------------+
+  |  Retail Investor |
+  +--------+---------+
+           | Interacts via Web UI (Vite + React)
+           v
+  +-------------------------------------------------------------+
+  |              FRONTEND APPLICATION (Port 5173)               |
+  |  - Form inputs, file uploads, chat queries, quiz answers     |
+  +------------------------------+------------------------------+
+                                 | Proxy /api -> Port 5001
+                                 v
+  +-------------------------------------------------------------+
+  |               BACKEND API GATEWAY (Port 5001)               |
+  |  - Auth validation, JWT decode, rate limiting               |
+  |  - Direct database operations (Complaints, Tracking, Users) |
+  +------------------------------+------------------------------+
+                                 | Forward AI Tasks -> Port 8000
+                                 v
+  +-------------------------------------------------------------+
+  |               AI MICROSERVICE (Port 8000)                   |
+  |                                                             |
+  |  +-------------------------------------------------------+  |
+  |  |              MULTI-AGENT ORCHESTRATOR                 |  |
+  |  +---------------------------+---------------------------+  |
+  |                              |                              |
+  |        +---------------------+---------------------+        |
+  |        |                     |                     |        |
+  |        v                     v                     v        |
+  |  [Rights Agent]     [Grievance Agent]     [Scam Agent]      |
+  |        |                     |                     |        |
+  |        v                     v                     v        |
+  |  [Doc Forensic]     [Complaint Agent]     [Learning Agent]  |
+  |                              |                              |
+  |                              v                              |
+  |  +-------------------------------------------------------+  |
+  |  |                 HYBRID RAG PIPELINE                   |  |
+  |  |  BM25 Search + Dense Vector Search + Reranker        |  |
+  |  +---------------------------+---------------------------+  |
+  |                              |                              |
+  +------------------------------|------------------------------+
+                                 |
+                                 v
+  +-------------------------------------------------------------+
+  |                    RAG STORAGE ENGINE                       |
+  |  - chunks.json (77 statutory chunks with page numbers)      |
+  |  - embeddings.npy (256-dim dense vector matrix)             |
+  |  - knowledge_manifest.json (SHA-256 document cache)         |
+  +-------------------------------------------------------------+
+
+4.2 RAG HYBRID RETRIEVAL & CITATION FLOWCHART
+--------------------------------------------------------------------------------
+
+         User Regulatory Query
+                   |
+                   v
+       +-----------------------+
+       |   Query Normalization |
+       | & Financial Synonyms  |
+       +-----------+-----------+
+                   |
+       +-----------+-----------+
+       |                       |
+       v                       v
+ +-------------+       +---------------+
+ | BM25 Lexical|       | Dense Vector  |
+ | Keyword     |       | Similarity    |
+ | Matching    |       | Search        |
+ +------+------+       +-------+-------+
+        |                      |
+        +-----------+----------+
+                    |
+                    v
+       +-----------------------+
+       | Reciprocal Rank Fusion|
+       |  (RRF) Candidate Pool |
+       +-----------+-----------+
+                   |
+                   v
+       +-----------------------+
+       | Cross-Relevance       |
+       | Scoring & Reranking   |
+       +-----------+-----------+
+                   |
+                   v
+       +-----------------------+
+       | Groundedness Check:   |
+       | Max Score >= 0.25?    |
+       +-----------+-----------+
+             /           \
+           YES            NO
+           /                \
+          v                  v
++-------------------+  +----------------------------------------+
+| Format Grounded   |  | Fallback Triggered:                    |
+| Answer with:      |  | "I could not find sufficient           |
+| - Authority       |  |  information in the verified           |
+| - Document Title  |  |  knowledge base."                      |
+| - Section & Page  |  | (Zero hallucination guaranteed)        |
+| - Exact Excerpt   |  +----------------------------------------+
++-------------------+
+
+4.3 DOCUMENT FORENSIC EXTRACTION & EVIDENCE MAPPING FLOWCHART
+--------------------------------------------------------------------------------
+
+      Uploaded Financial Document (PDF / TXT Ledger)
+                            |
+                            v
+               +--------------------------+
+               |  Text & Table Extraction |
+               |     (PyPDF2 / Parser)    |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               |  Line Item Regex Scanner |
+               | - Dates & Timestamps     |
+               | - Debits & Credits (INR) |
+               | - Brokerage / STT / GST  |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               |  Statutory Ceiling Check |
+               | - Is brokerage > 2.5%?   |
+               | - Is contract note missing|
+               |   beyond 24 hours?       |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               |   Evidence Completeness  |
+               |         Evaluation       |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               |   Structured Audit Card  |
+               | - Potential Issues       |
+               | - Detected Charges       |
+               | - Missing Evidence       |
+               | - Recommended Actions    |
+               +--------------------------+
+
+4.4 GRIEVANCE INTELLIGENCE & QUALITY SCORING LOOP
+--------------------------------------------------------------------------------
+
+      Investor Input: "Broker deducted ₹2,500 without Contract Note"
+                            |
+                            v
+               +--------------------------+
+               | Grievance Categorization |
+               | -> "Unauthorized Charges"|
+               | -> Severity: HIGH        |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               |  Evidence Gap Analysis   |
+               | [x] Transaction Ledger   |
+               | [x] Date of Debit        |
+               | [ ] Fee Schedule         |
+               | [ ] Written Intermediary |
+               |     Communication        |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               | Quality Score Engine     |
+               | Clarity:       25 / 25   |
+               | Facts & Amt:   25 / 25   |
+               | Evidence:      18 / 25   |
+               | Escalation:    20 / 25   |
+               | Total Score:   88 / 100  |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               | Generate Complaint Draft |
+               | - Subject & Parties      |
+               | - Chronology of Events   |
+               | - Statutory Violations   |
+               | - Reliefs Claimed        |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               | Investor Review & Edit   |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               | Stamped PDF Generation   |
+               |  & Live Status Tracking  |
+               +--------------------------+
+
+4.5 ADAPTIVE LEARNING & SAFETY SCORE RECALCULATION LOOP
+--------------------------------------------------------------------------------
+
+             Initial Investor Safety Score: 78/100
+                            |
+                            v
+               +--------------------------+
+               | Multi-Dimensional Audit  |
+               | - Rights Awareness: 90%  |
+               | - Grievance Rules:  85%  |
+               | - Scam Radar:       60% <|-- WEAK AREA
+               | - KYC Hygiene:      75%  |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               | Adaptive Question Engine |
+               | Selects High-Difficulty  |
+               | Scam Scenario Challenge  |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               | Investor Submits Answer  |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               | Instant Rationale &      |
+               | Statutory Rule Reference |
+               +------------+-------------+
+                            |
+                            v
+               +--------------------------+
+               | Safety Score Updates:    |
+               | 78/100  ======>  86/100  |
+               +--------------------------+
+
+================================================================================
+5. HOW TO RUN THE APPLICATION (STEP-BY-STEP)
+================================================================================
+
+5.1 PREREQUISITES
+--------------------------------------------------------------------------------
+1. Node.js: Version 18.0+ or 20.0+ (Run `node -v` to verify)
+2. Python: Version 3.10+ or 3.12+ (Run `python3 -v` to verify)
+3. Package Managers: `npm` for frontend/backend, `pip` / `uv` for Python.
+4. MongoDB (Optional): If MongoDB is running locally on port 27017, the backend 
+   connects seamlessly. If MongoDB is absent, the backend automatically uses 
+   its built-in resilient in-memory data store.
+
+5.2 QUICK LAUNCH COMMANDS
+--------------------------------------------------------------------------------
+Open three separate terminal windows in the project root:
+
+TERMINAL 1 (Python AI Microservice):
+--------------------------------------------------------------------------------
+cd ai-service
+# Activate virtual environment
+source .venv/bin/activate
+# Start FastAPI on port 8000
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+TERMINAL 2 (Node.js Backend Gateway):
+--------------------------------------------------------------------------------
+cd backend
+# Start Express server on port 5001
+node src/server.js
+
+TERMINAL 3 (React Vite Frontend):
+--------------------------------------------------------------------------------
+cd frontend
+# Start Vite development server on port 5173
+npm run dev
+
+Now open your browser and navigate to:
+http://localhost:5173
+
+All requests to `http://localhost:5173/api/*` are automatically proxied 
+to the Node.js backend on `http://localhost:5001/api/*`, which in turn delegates 
+AI intelligence tasks to `http://localhost:8000/*`.
+
+5.3 RAG INGESTION & RE-INDEXING COMMANDS
+--------------------------------------------------------------------------------
+To ingest new official circulars, PDFs, or regulations:
+1. Place the files into the appropriate folder under `/data/rag_data/`
+   (e.g., `sebi/`, `nse/`, `bse/`, `amfi/`, `rbi/`).
+2. Run the ingestion command from the project root:
+   npm run rag:ingest
+   (or from `ai-service`: `source .venv/bin/activate && python -m rag.ingest`)
+
+To wipe the vector cache and force a complete re-indexing:
+   npm run rag:reindex
+   (or from `ai-service`: `python -m rag.ingest --force`)
+
+================================================================================
+6. HOW TO TEST THE ENTIRE PLATFORM
+================================================================================
+
+6.1 AUTOMATED RAG BENCHMARK EVALUATION TESTING
+--------------------------------------------------------------------------------
+We built a rigorous automated evaluator that verifies retrieval accuracy, 
+citation coverage, groundedness, and anti-hallucination behavior.
+
+Run the test suite directly:
+   npm run rag:evaluate
+
+Expected Terminal Output:
+--------------------------------------------------------------------------------
+================================================================================
+NIVESHRAKSHAK RAG BENCHMARK EVALUATION SUITE
+================================================================================
+Storage Directory: .../ai-service/rag_storage
+Total Chunks In Index: 77
+
+[TC01] What are an investor's rights regarding contract notes from a stock broker?
+       -> PASS | Grounded: True | Confidence: HIGH | Precision: 1.00
+
+[TC02] How does an investor escalate a complaint on SEBI SCORES 2.0 and SMART ODR?
+       -> PASS | Grounded: True | Confidence: HIGH | Precision: 1.00
+
+[TC03] What is the redemption payout timeline for equity mutual funds under AMFI?
+       -> PASS | Grounded: True | Confidence: HIGH | Precision: 1.00
+
+[TC04] Under what circumstances can a bank customer approach the RBI Ombudsman?
+       -> PASS | Grounded: True | Confidence: HIGH | Precision: 1.00
+
+[TC05] What should an investor do if they are promised 50% guaranteed monthly returns?
+       -> PASS | Grounded: True | Confidence: HIGH | Precision: 1.00
+
+[TC06] Can a trading member execute trades based on verbal instructions without proof?
+       -> PASS | Grounded: True | Confidence: HIGH | Precision: 1.00
+
+[TC07] How do I trade cryptocurrency futures on the Tokyo commodity exchange?
+       (Out-of-domain Anti-Hallucination Guardrail Check)
+       -> PASS | Grounded: False | Fallback Triggered: True
+
+EVALUATION SUMMARY REPORT:
+- Total Test Cases: 7
+- Precision Rate: 100.0%
+- Citation Coverage: 100.0%
+- Groundedness Rate: 100.0%
+- Unsupported / Out-of-Domain Block Rate: 100.0%
+================================================================================
+
+6.2 API ENDPOINTS TESTING (cURL COMMANDS)
+--------------------------------------------------------------------------------
+
+1. Health Check (AI Microservice):
+curl -s http://localhost:8000/health | jq .
+
+2. RAG Verified Rights Query:
+curl -s -X POST http://localhost:8000/rag/query \
+  -H "Content-Type: application/json" \
+  -d '{"query": "Within how many hours must a broker issue a contract note?"}' | jq .
+
+3. Grievance Intelligence Analysis:
+curl -s -X POST http://localhost:8000/grievance/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "description": "My broker deducted Rs 2,500 without sending any contract note or explanation.",
+    "entity": "Apex Securities Ltd",
+    "amount": 2500
+  }' | jq .
+
+4. Scam & Fraud Signal Radar:
+curl -s -X POST http://localhost:8000/scam/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "text": "Join our VIP Telegram group for 40% guaranteed monthly profit. Transfer money to our private UPI ID now before slots close!"
+  }' | jq .
+
+5. Document Forensic Audit:
+curl -s -X POST http://localhost:8000/document/analyze \
+  -H "Content-Type: application/json" \
+  -d '{
+    "file_name": "ledger_oct_2024.txt",
+    "content": "Date: 14-Oct-2024 Debit: INR 2,500 Narration: Portfolio Maintenance Fee without Contract Note"
+  }' | jq .
+
+6. Complaint Drafting & Quality Scoring:
+curl -s -X POST http://localhost:8000/complaint/draft \
+  -H "Content-Type: application/json" \
+  -d '{
+    "category": "Unauthorized Charges",
+    "entity": "Apex Securities Ltd",
+    "amount": 2500,
+    "description": "Broker deducted Rs 2,500 as unverified fee. No contract note provided.",
+    "evidence_items": ["Ledger Statement showing debit of INR 2500", "Email inquiry to broker"]
+  }' | jq .
+
+6.3 FRONTEND FEATURE-BY-FEATURE TESTING CHECKLIST
+--------------------------------------------------------------------------------
+Open http://localhost:5173 and perform the following verifications:
+
+[x] 1. Navigation Bar:
+    Click across all 8 navigation items:
+    - Command Center (Home)
+    - Rights Assistant (RAG Chat)
+    - Grievance Studio (Drafting & Quality Scoring)
+    - Document Audit (Forensic Ledger Scanner)
+    - Scam Radar (Fraud Signal Detector)
+    - Safety Academy (Adaptive Quiz & Score)
+    - Rights Library (Statutory Catalog)
+    - RAG Health (Knowledge Base Monitor)
+    Verify smooth, instantaneous transitions without page reloads.
+
+[x] 2. Command Center:
+    - Verify the "Interactive Operating System Flow" diagram renders 6 nodes.
+    - Click any node (e.g. "RAG Knowledge") and observe navigation to that module.
+    - Check the "Investor Safety Score" card (displays 82/100 with category badges).
+    - Check the "AI Recommended Next Best Action" banner.
+
+[x] 3. Rights Assistant:
+    - Click one of the quick prompt chips: "Can my broker deduct fees without a contract note?"
+    - Observe the streaming animation and response.
+    - Inspect the `<SourceCitation />` cards: verify authority badge (NSE/SEBI), 
+      document title, section, page number, and clickable "View Evidence Excerpt".
+    - Test an out-of-domain question: "How do I buy gold in Dubai?"
+      Verify the system triggers the anti-hallucination guardrail:
+      "I could not find sufficient information in the verified knowledge base."
+
+[x] 4. Grievance Studio:
+    - Click "Load Sample Dispute" (populates: Apex Securities, ₹2,500, description).
+    - Click "Analyze Grievance with AI".
+    - Verify:
+      * Grievance Intelligence Card appears with HIGH severity.
+      * Evidence Completeness meter displays missing documents.
+      * Escalation Roadmap displays 21-day timeline to SEBI SCORES 2.0.
+      * Complaint Quality Score calculates an 88/100 score.
+      * Formulated formal complaint letter appears with Editable textarea.
+      * Click "Download Formal Complaint (PDF)" — verifies generation of 
+        official stamped PDF file.
+
+[x] 5. Document Forensic Studio:
+    - Click "Load Sample Unexplained Charge Ledger".
+    - Click "Run AI Forensic Audit".
+    - Observe the scanning animation.
+    - Verify detected charges breakdown: ₹2,500 unauthorized debit flagged 
+      as a potential statutory breach under SEBI circular rules.
+
+[x] 6. Scam & Fraud Radar:
+    - Click "Load High-Risk Sample Message".
+    - Click "Analyze for Risk Signals".
+    - Verify the Risk Level displays HIGH.
+    - Verify all 4 detected signals: Guaranteed Returns, High-Pressure Tactic, 
+      Unverified Intermediary, and Unofficial Payment Channel.
+    - Read the educational Next Steps guidance.
+
+[x] 7. Safety Academy:
+    - View the 6-dimension Safety Score radar breakdown.
+    - Click "Launch Adaptive Scenario Quiz".
+    - Answer a scenario question.
+    - Verify instantaneous educational explanation citing SEBI regulations.
+    - Verify Safety Score recalculates dynamically.
+
+[x] 8. RAG Knowledge Health Monitor:
+    - Verify 77 Chunks and 10 Statutory Documents are displayed.
+    - Inspect authority distribution chart (SEBI, NSE, BSE, AMFI, RBI).
+    - Click "Run Live Benchmark Evaluation" — executes real-time evaluation 
+      and outputs 100% precision, citation, and groundedness metrics.
+
+6.4 2-MINUTE HACKATHON JUDGE DEMO SCRIPT
+--------------------------------------------------------------------------------
+When presenting to judges or evaluators, follow this exact 90-second sequence:
+
+1. THE HOOK (10 seconds):
+   "Judges, retail investors in India lose thousands of crores each year not 
+   just to direct scams, but to hidden fees, delayed redemptions, and complex 
+   regulatory dispute portals. NiveshRakshak turns that confusion into a 
+   single, end-to-end investor protection operating system."
+
+2. THE 1-CLICK DEMO (40 seconds):
+   - From the Command Center, click the golden button: "1-Click Investor Demo".
+   - Watch the modal step through the 6 stages in real-time:
+     * Stage 1: Grievance Detection (Unexplained ₹2,500 deduction)
+     * Stage 2: Forensic Document Audit (Ledger scan highlights missing contract note)
+     * Stage 3: Grounded Regulatory RAG (SEBI/NSE rule retrieved with page number)
+     * Stage 4: Evidence Completeness Gap (Missing fee schedule identified)
+     * Stage 5: Formal Complaint & Quality Score (88/100 score calculated)
+     * Stage 6: Grievance Lifecycle Tracking (21-day escalation roadmap)
+
+3. WHY IT IS DIFFERENT & TRUSTED (30 seconds):
+   - Open the "Rights Assistant": demonstrate real-time question with verifiable 
+     page citations.
+   - Show the "RAG Health Monitor": show 77 statutory chunks and the 100% 
+     relevance live evaluator score.
+   - Conclude: "From confusion to complaint to resolution — powered by verified 
+     law, not generative hallucinations."
+
+================================================================================
+7. ANTI-HALLUCINATION & SECURITY GUARDRAILS
+================================================================================
+NiveshRakshak implements five non-negotiable security and trust guardrails:
+
+1. Strict RAG Grounding Filter (`pipeline.py`):
+   Every answer is constructed from retrieved context chunks. If the similarity 
+   score fails the statistical relevance threshold, the system enforces the 
+   statutory safe-harbor fallback. It never invents legal provisions.
+
+2. Source Citation Transparency (`citation.py`):
+   Every regulatory proposition is tied to authority, document title, section, 
+   and page number. Users can expand citations to review the original legal text.
+
+3. Human-in-the-Loop Complaint Drafter:
+   The complaint draft is explicitly marked as "AI-Generated Draft — Review 
+   Before Submission." The platform never automatically files complaints on 
+   behalf of an investor without explicit review.
+
+4. Zero PII & Credential Logging:
+   Uploaded document text is processed in memory. Passwords, auth tokens, bank 
+   account passwords, and personal financial credentials are never written 
+   to server logs.
+
+5. Educational Risk Terminology:
+   The Scam Radar utilizes safe harbor framing: "Potential Risk Signals 
+   Detected" rather than making unverified criminal accusations.
+
+================================================================================
+8. TROUBLESHOOTING & COMMON SCENARIOS
+================================================================================
+
+Q1: What if the AI service fails to start with "Address already in use"?
+A1: A previous process may be occupying port 8000. Run:
+    lsof -i :8000
+    kill -9 <PID>
+    Then restart the service with `uvicorn main:app --host 0.0.0.0 --port 8000`
+
+Q2: What if MongoDB is not running on my machine?
+A2: The Node.js backend automatically detects connection unavailability and 
+    activates its in-memory storage driver. The app functions with 100% of 
+    features enabled without requiring a MongoDB daemon.
+
+Q3: Can I add new PDF circulars to the RAG knowledge base?
+A3: Yes! Copy any `.pdf`, `.txt`, or `.md` file into `/data/rag_data/` and run:
+    npm run rag:ingest
+    The system extracts the text, computes hierarchical chunks, and generates 
+    vector embeddings automatically.
+
+Q4: What if I want to run the application completely offline without internet?
+A4: NiveshRakshak was designed to run 100% offline out-of-the-box. The dense 
+    vectorizer, BM25 matcher, RRF reranker, and multi-agents use local numerical 
+    models and require zero external API keys or cloud connections.
+
+================================================================================
+END OF SYSTEM FLOW, ARCHITECTURE & TESTING GUIDE
+================================================================================
