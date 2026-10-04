@@ -14,6 +14,7 @@ import {
   RotateCcw
 } from 'lucide-react';
 import { api, GrievanceAnalysis, ComplaintDraft } from '../services/api';
+import { downloadComplaintPDF } from '../utils/pdfExport';
 
 interface GrievanceStudioProps {
   onNavigate: (tab: string, prefillData?: any) => void;
@@ -93,8 +94,15 @@ export const GrievanceStudio: React.FC<GrievanceStudioProps> = ({ onNavigate, pr
     }
   };
 
-  const handleDownloadPDF = () => {
-    window.open(`/api/complaints/INV-10234/pdf`, '_blank');
+  const handleDownloadPDF = async () => {
+    await downloadComplaintPDF({
+      complaintId: 'INV-10234',
+      entity: entity || 'Zerodha Broking Limited',
+      category: category || 'Unauthorized charges',
+      amount: amount || 2500,
+      draftText: editableDraftText || draft?.draft_text || description,
+      date: date || new Date().toISOString().split('T')[0]
+    });
   };
 
   const handleCopyDraft = () => {

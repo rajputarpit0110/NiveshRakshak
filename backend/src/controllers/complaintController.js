@@ -306,13 +306,28 @@ exports.downloadPDF = async (req, res, next) => {
     }
 
     if (!complaint) {
-      complaint = memoryComplaints[0];
+      complaint = {
+        complaintId: id || 'INV-10234',
+        entity: req.query.entity || req.body?.entity || 'Zerodha Broking Limited',
+        category: req.query.category || req.body?.category || 'Unauthorized charges',
+        amount: Number(req.query.amount || req.body?.amount) || 2500,
+        draftText: req.query.draftText || req.body?.draftText || (memoryComplaints[0] && memoryComplaints[0].draftText),
+        createdAt: new Date()
+      };
+    } else if (req.query.draftText || req.body?.draftText) {
+      complaint = {
+        ...(complaint.toObject ? complaint.toObject() : complaint),
+        draftText: req.query.draftText || req.body?.draftText || complaint.draftText,
+        entity: req.query.entity || req.body?.entity || complaint.entity,
+        amount: Number(req.query.amount || req.body?.amount) || complaint.amount
+      };
     }
 
     const pdfBuffer = await PDFService.generateComplaintPDF(complaint);
 
     res.setHeader('Content-Type', 'application/pdf');
     res.setHeader('Content-Disposition', `attachment; filename=NiveshRakshak_${complaint.complaintId || 'Grievance'}.pdf`);
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition, Content-Type');
     res.send(pdfBuffer);
   } catch (error) {
     next(error);

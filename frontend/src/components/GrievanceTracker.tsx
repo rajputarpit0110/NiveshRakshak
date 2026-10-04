@@ -6,6 +6,7 @@ import {
   Download
 } from 'lucide-react';
 import { api } from '../services/api';
+import { downloadComplaintPDF } from '../utils/pdfExport';
 
 interface GrievanceTrackerProps {
   onNavigate: (tab: string) => void;
@@ -67,8 +68,15 @@ export const GrievanceTracker: React.FC<GrievanceTrackerProps> = ({ onNavigate }
     }
   };
 
-  const handleDownloadPDF = () => {
-    window.open(`/api/complaints/${complaint.complaintId}/pdf`, '_blank');
+  const handleDownloadPDF = async () => {
+    await downloadComplaintPDF({
+      complaintId: complaint.complaintId || 'INV-10234',
+      entity: complaint.entity || 'Zerodha Broking Limited',
+      category: complaint.category || 'Unauthorized charges',
+      amount: complaint.amount || 2500,
+      draftText: complaint.draftText || `FORMAL COMPLAINT & DISPUTE REDRESSAL NOTICE\n\nReference: ${complaint.complaintId || 'INV-10234'}\nTarget Entity: ${complaint.entity}\nDisputed Amount: ₹${complaint.amount}\nStatus: ${complaint.status}\n\nNotice is hereby served under SEBI circular provisions regarding unresolved charges. The intermediary is requested to provide an Action Taken Report (ATR) within statutory timelines.`,
+      date: complaint.createdAt ? new Date(complaint.createdAt).toISOString().split('T')[0] : undefined
+    });
   };
 
   const currentStageIndex = stages.indexOf(complaint.status);
