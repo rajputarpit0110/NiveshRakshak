@@ -19,11 +19,11 @@ export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [prefillGrievance, setPrefillGrievance] = useState<any>(null);
-  const [searchPrefill, setSearchPrefill] = useState<string>('');
+  const [searchQueryTrigger, setSearchQueryTrigger] = useState<{ query: string; id: number } | null>(null);
 
   const handleNavigate = (tab: string, prefillData?: any) => {
     if (prefillData?.query) {
-      setSearchPrefill(prefillData.query);
+      setSearchQueryTrigger({ query: prefillData.query, id: Date.now() });
     }
     if (prefillData) {
       setPrefillGrievance(prefillData);
@@ -33,7 +33,7 @@ export const App: React.FC = () => {
   };
 
   const handleTopSearch = (query: string) => {
-    setSearchPrefill(query);
+    setSearchQueryTrigger({ query, id: Date.now() });
     setActiveTab('chat');
   };
 
@@ -42,7 +42,13 @@ export const App: React.FC = () => {
       case 'dashboard':
         return <CommandCenter onNavigate={handleNavigate} onLaunchDemo={() => setIsDemoOpen(true)} />;
       case 'chat':
-        return <RightsChat onNavigate={handleNavigate} />;
+        return (
+          <RightsChat 
+            key={searchQueryTrigger?.id || 'chat-view'}
+            onNavigate={handleNavigate} 
+            initialQuery={searchQueryTrigger?.query} 
+          />
+        );
       case 'grievance':
         return <GrievanceStudio onNavigate={handleNavigate} prefillData={prefillGrievance} />;
       case 'tracker':

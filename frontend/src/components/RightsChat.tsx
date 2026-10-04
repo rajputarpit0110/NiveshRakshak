@@ -25,12 +25,14 @@ interface Message {
 
 interface RightsChatProps {
   onNavigate: (tab: string, prefillData?: any) => void;
+  initialQuery?: string;
 }
 
-export const RightsChat: React.FC<RightsChatProps> = ({ onNavigate }) => {
+export const RightsChat: React.FC<RightsChatProps> = ({ onNavigate, initialQuery }) => {
   const [query, setQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [authorityFilter, setAuthorityFilter] = useState('ALL');
+  const processedQueryRef = React.useRef<string>('');
 
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -92,6 +94,13 @@ export const RightsChat: React.FC<RightsChatProps> = ({ onNavigate }) => {
       setLoading(false);
     }
   };
+
+  React.useEffect(() => {
+    if (initialQuery && initialQuery.trim() && initialQuery.trim() !== processedQueryRef.current) {
+      processedQueryRef.current = initialQuery.trim();
+      handleSend(initialQuery.trim());
+    }
+  }, [initialQuery]);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
