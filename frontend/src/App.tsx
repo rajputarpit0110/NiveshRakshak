@@ -93,7 +93,7 @@ export const App: React.FC = () => {
 
         {/* Right Sidebar (shown on dashboard view matching the screenshot) */}
         {activeTab === 'dashboard' && (
-          <div className="hidden xl:block p-6 pl-0">
+          <div className="hidden xl:block p-6 pl-0 sticky top-[61px] h-[calc(100vh-61px)] overflow-y-auto">
             <RightSidebar onNavigate={handleNavigate} />
           </div>
         )}

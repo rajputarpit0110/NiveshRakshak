@@ -35,7 +35,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({ activeTab, onNavigate 
   ];
 
   return (
-    <aside className="w-60 lg:w-64 bg-white border-r border-slate-200/90 p-4 flex flex-col justify-between shrink-0 min-h-[calc(100vh-61px)]">
+    <aside className="w-60 lg:w-64 bg-white border-r border-slate-200/90 p-4 flex flex-col justify-between shrink-0 sticky top-[61px] h-[calc(100vh-61px)] overflow-y-auto z-30">
       {/* Navigation Links */}
       <div className="space-y-1">
         {navItems.map((item) => {
