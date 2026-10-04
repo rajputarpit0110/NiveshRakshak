@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Navbar } from './components/Navbar';
+import { TopHeader } from './components/layout/TopHeader';
+import { LeftSidebar } from './components/layout/LeftSidebar';
+import { RightSidebar } from './components/layout/RightSidebar';
 import { CommandCenter } from './components/CommandCenter';
 import { RightsChat } from './components/RightsChat';
 import { GrievanceStudio } from './components/GrievanceStudio';
@@ -11,19 +13,28 @@ import { RightsLibrary } from './components/RightsLibrary';
 import { KnowledgeHealth } from './components/KnowledgeHealth';
 import { TrustCenter } from './components/TrustCenter';
 import { DemoModal } from './components/DemoModal';
-import { ExternalLink } from 'lucide-react';
+import { AnimatePresence, motion } from 'framer-motion';
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [isDemoOpen, setIsDemoOpen] = useState(false);
   const [prefillGrievance, setPrefillGrievance] = useState<any>(null);
+  const [searchPrefill, setSearchPrefill] = useState<string>('');
 
   const handleNavigate = (tab: string, prefillData?: any) => {
+    if (prefillData?.query) {
+      setSearchPrefill(prefillData.query);
+    }
     if (prefillData) {
       setPrefillGrievance(prefillData);
     }
     setActiveTab(tab);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleTopSearch = (query: string) => {
+    setSearchPrefill(query);
+    setActiveTab('chat');
   };
 
   const renderActiveView = () => {
@@ -54,60 +65,48 @@ export const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased selection:bg-emerald-100 selection:text-emerald-900">
-      {/* Top Navigation */}
-      <Navbar
-        activeTab={activeTab}
-        setActiveTab={handleNavigate}
-        onLaunchDemo={() => setIsDemoOpen(true)}
-      />
+    <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col antialiased selection:bg-emerald-100 selection:text-emerald-900 font-sans">
+      
+      {/* 1. Full-width Top Header matching image */}
+      <TopHeader onSearch={handleTopSearch} onLaunchDemo={() => setIsDemoOpen(true)} />
 
-      {/* Main Content Area */}
-      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8">
-        {renderActiveView()}
-      </main>
+      {/* 2. Main Shell Layout: Sidebar + Workspace + Optional Right Panel */}
+      <div className="flex-1 flex max-w-[1600px] w-full mx-auto">
+        
+        {/* Left Fixed Navigation Sidebar */}
+        <LeftSidebar activeTab={activeTab} onNavigate={handleNavigate} />
 
-      {/* 1-Click Interactive Demo Modal */}
+        {/* Center Main Workspace */}
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:p-8 overflow-y-auto">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeTab}
+              initial={{ opacity: 0, y: 6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -6 }}
+              transition={{ duration: 0.18, ease: 'easeOut' }}
+            >
+              {renderActiveView()}
+            </motion.div>
+          </AnimatePresence>
+        </main>
+
+        {/* Right Sidebar (shown on dashboard view matching the screenshot) */}
+        {activeTab === 'dashboard' && (
+          <div className="hidden xl:block p-6 pl-0">
+            <RightSidebar onNavigate={handleNavigate} />
+          </div>
+        )}
+
+      </div>
+
+      {/* Interactive 2-min Demo Modal */}
       <DemoModal
         isOpen={isDemoOpen}
         onClose={() => setIsDemoOpen(false)}
         onNavigate={handleNavigate}
       />
 
-      {/* Clean Minimal Footer */}
-      <footer className="mt-auto border-t border-slate-200 bg-white py-6 px-4 text-xs text-slate-500">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2 font-medium">
-            <span className="font-bold text-slate-900">Nivesh<span className="text-emerald-600">Rakshak</span></span>
-            <span>—</span>
-            <span>AI Investor Rights & Grievance Assistant</span>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-5 text-xs">
-            <button 
-              onClick={() => handleNavigate('trust')} 
-              className="text-slate-600 hover:text-emerald-600 transition-colors"
-            >
-              Trust & Safety
-            </button>
-            <button 
-              onClick={() => handleNavigate('health')} 
-              className="text-slate-600 hover:text-emerald-600 transition-colors"
-            >
-              RAG Health
-            </button>
-            <a 
-              href="https://scores.sebi.gov.in" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-slate-600 hover:text-slate-900 flex items-center gap-1"
-            >
-              <span>SEBI SCORES 2.0</span>
-              <ExternalLink className="w-3 h-3" />
-            </a>
-          </div>
-        </div>
-      </footer>
     </div>
   );
 };
