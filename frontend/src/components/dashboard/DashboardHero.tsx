@@ -20,7 +20,7 @@ export const DashboardHero: React.FC = () => {
         {/* Left Content */}
         <div className="max-w-2xl space-y-3">
           <div className="flex items-center gap-1.5 text-sm font-bold text-slate-800">
-            <span>Good Morning, Rohan!</span>
+            <span>Good Morning, Investor!</span>
             <span className="text-base animate-bounce">👋</span>
           </div>
 

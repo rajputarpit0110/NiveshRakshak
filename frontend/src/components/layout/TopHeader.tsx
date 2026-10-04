@@ -3,10 +3,7 @@ import {
   ShieldCheck, 
   Search, 
   Bell, 
-  Sun, 
-  Moon, 
-  Sparkles,
-  Command
+  Sparkles
 } from 'lucide-react';
 
 interface TopHeaderProps {
@@ -16,7 +13,6 @@ interface TopHeaderProps {
 
 export const TopHeader: React.FC<TopHeaderProps> = ({ onSearch, onLaunchDemo }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [isDark, setIsDark] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -65,8 +61,14 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onSearch, onLaunchDemo }) 
           </form>
         </div>
 
-        {/* Right: Actions, Theme, and Profile Avatar */}
+        {/* Right: Actions */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Active Protection Status Badge */}
+          <div className="hidden sm:flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 text-xs font-semibold">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span>Protection Active</span>
+          </div>
+
           {/* Notification Bell */}
           <button 
             title="Notifications"
@@ -75,26 +77,6 @@ export const TopHeader: React.FC<TopHeaderProps> = ({ onSearch, onLaunchDemo }) 
             <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white"></span>
           </button>
-
-          {/* Theme Toggle (Visual/Light) */}
-          <button 
-            onClick={() => setIsDark(!isDark)}
-            title="Toggle Theme"
-            className="p-2 rounded-full text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
-          >
-            {isDark ? <Moon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" /> : <Sun className="w-4 h-4 sm:w-5 sm:h-5 text-slate-600" />}
-          </button>
-
-          {/* User Profile Pill */}
-          <div className="flex items-center gap-2.5 pl-2 border-l border-slate-200">
-            <div className="w-8 h-8 rounded-full bg-emerald-900 text-white flex items-center justify-center font-bold text-xs ring-2 ring-emerald-50 shrink-0">
-              RS
-            </div>
-            <div className="hidden md:block text-left">
-              <p className="text-xs font-bold text-slate-900 leading-tight">Rohan Sharma</p>
-              <p className="text-[10px] text-slate-500 font-medium">Individual Investor</p>
-            </div>
-          </div>
         </div>
 
       </div>
