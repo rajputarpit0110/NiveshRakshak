@@ -6,8 +6,7 @@ import {
   AlertTriangle, 
   Paperclip, 
   Send, 
-  Sparkles,
-  ChevronRight,
+  ChevronRight, 
   Loader2
 } from 'lucide-react';
 import { api } from '../../services/api';

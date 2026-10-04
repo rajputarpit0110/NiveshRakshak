@@ -3,7 +3,6 @@ import {
   ShieldCheck, 
   CheckCircle2, 
   Lock, 
-  Sparkles,
   Landmark,
   Scale
 } from 'lucide-react';

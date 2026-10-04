@@ -6,7 +6,6 @@ import {
   BookOpen, 
   ArrowRight, 
   RotateCcw,
-  Sparkles,
   TrendingUp,
   Award
 } from 'lucide-react';

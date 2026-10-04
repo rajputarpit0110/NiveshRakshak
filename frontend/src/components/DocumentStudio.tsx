@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { 
   FileSearch, 
   UploadCloud, 
-  Sparkles, 
   FileText, 
   ArrowRight, 
   Scale, 
@@ -164,7 +163,7 @@ CLOSING BALANCE: ₹11,375.50 Cr`;
         <div className="lg:col-span-6 space-y-3">
           <div className="fintech-card p-3.5 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-emerald-600" />
+              <FileSearch className="w-4 h-4 text-emerald-600" />
               <span className="text-xs font-bold text-slate-900">Extracted Findings & Signals</span>
             </div>
             <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200">

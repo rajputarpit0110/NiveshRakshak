@@ -8,8 +8,7 @@ import {
   PhoneCall,
   Search,
   ArrowRight,
-  RotateCcw,
-  Sparkles
+  RotateCcw
 } from 'lucide-react';
 import { api, ScamAnalysis } from '../services/api';
 
@@ -119,7 +118,7 @@ Our admin will setup AnyDesk on your phone. Download via bit.ly/exclusive-bot-ap
             onClick={() => setInputText(sampleScamText)}
             className="text-xs text-amber-800 hover:text-amber-900 font-semibold flex items-center gap-1"
           >
-            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+            <ShieldAlert className="w-3.5 h-3.5 text-amber-600" />
             <span>Load Sample Telegram Pitch</span>
           </button>
         </div>

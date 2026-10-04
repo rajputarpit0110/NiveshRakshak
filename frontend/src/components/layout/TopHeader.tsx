@@ -2,8 +2,7 @@ import React, { useState } from 'react';
 import { 
   ShieldCheck, 
   Search, 
-  Bell, 
-  Sparkles
+  Bell
 } from 'lucide-react';
 
 interface TopHeaderProps {

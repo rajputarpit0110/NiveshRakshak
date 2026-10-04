@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   Send, 
-  Sparkles, 
   ShieldCheck, 
   CheckCircle2, 
   Search,
@@ -144,7 +143,7 @@ export const RightsChat: React.FC<RightsChatProps> = ({ onNavigate, initialQuery
         {/* Quick Action Prompts */}
         <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-2">
           <span className="text-xs font-semibold text-slate-500 mr-1 flex items-center gap-1">
-            <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+            <HelpCircle className="w-3.5 h-3.5 text-emerald-600" />
             Popular Queries:
           </span>
           {quickPrompts.map((qp, idx) => (

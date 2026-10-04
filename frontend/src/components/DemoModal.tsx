@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Sparkles, 
+  ShieldCheck, 
   X, 
   CheckCircle2, 
   ArrowRight, 
@@ -106,7 +106,7 @@ export const DemoModal: React.FC<DemoModalProps> = ({ isOpen, onClose, onNavigat
         <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
-              <Sparkles className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-slate-900 flex items-center gap-2">

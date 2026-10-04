@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { 
   FileCheck2, 
-  Sparkles, 
   CheckCircle, 
   AlertTriangle, 
   Download, 
@@ -143,7 +142,7 @@ export const GrievanceStudio: React.FC<GrievanceStudioProps> = ({ onNavigate, pr
             disabled={loading}
             className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm transition-all shadow-sm active:scale-95 flex items-center gap-2"
           >
-            <Sparkles className="w-4 h-4" />
+            <FileText className="w-4 h-4" />
             <span>{loading ? 'Evaluating...' : 'Generate Legal Draft'}</span>
           </button>
         </div>
@@ -394,7 +393,7 @@ export const GrievanceStudio: React.FC<GrievanceStudioProps> = ({ onNavigate, pr
                 onClick={handleAnalyzeAndDraft}
                 className="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs sm:text-sm transition-all shadow-xs flex items-center gap-2 active:scale-95"
               >
-                <Sparkles className="w-4 h-4" />
+                <FileCheck2 className="w-4 h-4" />
                 Generate Sample Complaint
               </button>
             </div>

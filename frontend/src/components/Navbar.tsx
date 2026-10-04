@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   ShieldAlert, 
-  Sparkles, 
+  LayoutDashboard, 
   MessageSquare, 
   FileCheck2, 
   Clock, 
@@ -45,7 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   }, []);
 
   const navItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: Sparkles },
+    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
     { id: 'chat', label: 'Rights Assistant', icon: MessageSquare },
     { id: 'grievance', label: 'Grievance Studio', icon: FileCheck2 },
     { id: 'tracker', label: 'Tracker', icon: Clock },
